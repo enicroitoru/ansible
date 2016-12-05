@@ -2,7 +2,7 @@
 
 - hosts: webservers:dbservers
   sudo: yes
-  gather_facts: no
+  gather_facts: yes
   roles: 
   - server-common
 

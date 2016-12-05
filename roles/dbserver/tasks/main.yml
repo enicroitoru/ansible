@@ -2,6 +2,16 @@
 
   - name: Ensure MySQL is installed
     apt: name=mysql-server state=present
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
   - name: Start MySQL
     service: name=mysql state=started
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
+
+  - name: Ensure MySQL is installed
+    apt: name=mysql-server state=present
+    when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat" 
+
+  - name: Start MySQL
+    service: name=mysqld state=started
+    when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"

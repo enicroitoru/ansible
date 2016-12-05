@@ -11,9 +11,13 @@
       prompt: What is your name?
 
   tasks:
-  - name: Ensure that Apache ins installed
+  - name: Ensure that Apache is installed
     apt: name=apache2 state=present
-    when: ansible_os_family == "Debian"
+    when: ansible_os_family == "Debian" or ansible_distribuition == "Ubuntu"
+
+  - name: ENsure that Apache is installed
+    yum : name=httpd state=present
+    when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"
 
   - name: Start Apache Services
     service: name=apache2 enabled=yes state=started
@@ -40,7 +44,14 @@
   tasks: 
   - name: Ensure MySQL is installed
     apt: name=mysql-server state=present
-    when: ansible_os_family == "Debian"
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
+
+  - name: Ensure MySQL is installed 
+    yum : name=mysql-server state=present
+    when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"
+
+  - name: Start MySQL
+    service: name=mysqld state=started
 
   - name: Start MySQL
     service: name=mysql state=started
@@ -51,3 +62,6 @@
   tasks:
   - name: Stop IPTABLES/UFW NOW !!!
     service: name=ufw state=stopped
+  
+  - name: Stop IPTABLES NOW !!!
+    service: name=iptables state=stopped
