@@ -1,0 +1,9 @@
+---
+  - name: Ensure that Apache is installed 
+    apt: name=apache2 state=present
+
+  - name: Start Apache Services
+    service: name=apache2 enabled=yes state=started
+
+  - name: Deploy configuration files
+    template: src=index.j2 dest={{doc_root}}/index.html

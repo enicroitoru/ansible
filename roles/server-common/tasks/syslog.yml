@@ -1,0 +1,10 @@
+---
+  - name: Install rsyslog
+    apt: name=rsyslog state=present
+
+  - name: Deploy syslog config
+    template: src=rsyslog.conf.j2 dest=/etc/rsyslog.conf
+    notify: Syslog Restart
+
+  - name: Verify if Syslog is running
+    service: name=rsyslog state=started
