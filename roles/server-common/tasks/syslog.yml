@@ -1,10 +1,26 @@
 ---
-  - name: Install rsyslog
+  - name: Install rsyslog Debian
     apt: name=rsyslog state=present
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
-  - name: Deploy syslog config
+  - name: Install rsyslog RedHat
+    yum: name=rsyslog state=present
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
+
+  - name: Deploy syslog config RedHat
     template: src=rsyslog.conf.j2 dest=/etc/rsyslog.conf
     notify: Syslog Restart
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
 
-  - name: Verify if Syslog is running
+  - name: Deploy syslog config Debian
+    template: src=rsyslog.conf.j2 dest=/etc/rsyslog.conf
+    notify: Syslog Restart
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
+
+  - name: Verify if Syslog is running Debian
     service: name=rsyslog state=started
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
+
+  - name: Verify if Syslog is running RedHat
+    service: name=rsyslog state=started
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"

@@ -13,15 +13,19 @@
   tasks:
   - name: Ensure that Apache is installed
     apt: name=apache2 state=present
-    when: ansible_os_family == "Debian" or ansible_distribuition == "Ubuntu"
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
   - name: ENsure that Apache is installed
     yum : name=httpd state=present
     when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"
 
-  - name: Start Apache Services
+  - name: Start Apache Services Debian
     service: name=apache2 enabled=yes state=started
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
+  - name: Start Apache Services RedHat
+    service: name=httpd enabled=yes state=started
+    when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"
  # - name: Deploy configuration file
   #  template: src=httpd.j2 dest=/etc/apache2/conf/apache2.conf
 #    notify:
@@ -35,8 +39,13 @@
     notify: 
        - Restart Apache
   handlers:
-     - name: Restart Apache
+     - name: Restart Apache Debian
        service: name=apache2 state=restarted
+       when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
+
+     - name: Restart Apache RedHat
+       service: name=httpd state=restarted
+       when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"
 
 - hosts: dbservers
   sudo: yes
@@ -46,22 +55,27 @@
     apt: name=mysql-server state=present
     when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
+
   - name: Ensure MySQL is installed 
     yum : name=mysql-server state=present
     when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"
 
-  - name: Start MySQL
+  - name: Start MySQL RedHat
     service: name=mysqld state=started
+    when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"
 
-  - name: Start MySQL
+  - name: Start MySQL Debian
     service: name=mysql state=started
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
 - hosts: webservers:dbservers
   sudo: yes
 
   tasks:
-  - name: Stop IPTABLES/UFW NOW !!!
+  - name: Stop IPTABLES/UFW on Debian NOW !!!
     service: name=ufw state=stopped
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
   
-  - name: Stop IPTABLES NOW !!!
+  - name: Stop IPTABLES on RedHat NOW !!!
     service: name=iptables state=stopped
+    when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"

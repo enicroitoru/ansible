@@ -1,7 +1,17 @@
 ---
 
-  - name: SNMP Restart
+  - name: SNMP Restart Debian
     service: name=snmpd state=restarted
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
-  - name: Syslog Restart 
+  - name: Syslog Restart Debian
     service: name=rsyslog state=restarted
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
+
+  - name: SNMP Restart Redhat
+    service: name=snmpd state=restarted
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
+
+  - name: Syslog Restart RedHat
+    service: name=rsyslog state=restarted
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"

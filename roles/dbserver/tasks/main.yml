@@ -1,17 +1,17 @@
 ---
 
-  - name: Ensure MySQL is installed
+  - name: Ensure MySQL is installed Debian
     apt: name=mysql-server state=present
     when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
-  - name: Start MySQL
+  - name: Start MySQL Debian
     service: name=mysql state=started
     when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
-  - name: Ensure MySQL is installed
+  - name: Ensure MySQL is installed RedHat
     apt: name=mysql-server state=present
     when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat" 
 
-  - name: Start MySQL
+  - name: Start MySQL RedHat
     service: name=mysqld state=started
     when: ansible_os_family == "CentOS" or ansible_distribution == "RedHat"

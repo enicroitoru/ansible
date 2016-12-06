@@ -1,14 +1,39 @@
 ---
 
-  - name: Install net-snmp
+  - name: Install net-snmp Debian
     apt: name=snmpd state=present
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
-  - name: Install snmp mibs downloader
+  - name: Install snmp mibs downloader Debian
     apt: name=snmp-mibs-downloader state=present
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
 
-  - name: Deploy SNMP Config
+  - name: Install net-snmp RedHat
+    yum: name=net-snmp state=present
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
+
+  - name: Install Install snmp utils RedHat
+    yum: name=net-snmp-utils state=present
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
+
+  - name: Deploy SNMP Config Debian
     template: src=snmp.conf.j2 dest=/etc/snmp/snmp.conf
     notify: SNMP Restart
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
+
+  - name: Install libselinux-python for RedHat
+    yum: name=libselinux-python
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
+
+  - name: Deploy SNMP Config RedHat
+    template: src=snmpd.conf.j2 dest=/etc/snmp/snmpd.conf
+    notify: SNMP Restart
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
 
   - name: Make sure service is running
     service: name=snmpd state=started
+    when: ansible_os_family == "RedHat" or ansible_distribution == "CentOS"
+
+  - name: Make sure service is running
+    service: name=snmpd state=started
+    when: ansible_os_family == "Debian" or ansible_distribution == "Ubuntu"
